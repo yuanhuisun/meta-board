@@ -2,6 +2,12 @@
 
 namespace App\Models;
 
+/**
+ * Chirps: addd chirps method called at $request->user() object, need create this method on our User model 
+ * to define a "has_many" relationship
+ */
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -43,5 +49,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Define a chirps method used on $request->user() object
+     */
+    public function chirps(): HasMany
+    {
+        return $this->hasMany(Chirp::class);
     }
 }
