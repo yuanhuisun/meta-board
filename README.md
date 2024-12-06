@@ -229,7 +229,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
-class PermissionsDemoSeeder extends Seeder
+class PermissionUserSeeder extends Seeder
 {
     /**
      * Create the initial roles and permissions.
@@ -239,71 +239,63 @@ class PermissionsDemoSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // create permissions
-        Permission::create(['name' => 'edit articles']);
-        Permission::create(['name' => 'delete articles']);
-        Permission::create(['name' => 'publish articles']);
-        Permission::create(['name' => 'unpublish articles']);
+        // create permissions - CRUD : Create / Read / Update / Delete , by Yuanhui at 2024/12/06
+        // task / ticket level
+        Permission::create(['name' => 'create tasks']);
+        Permission::create(['name' => 'read tasks']);
+        Permission::create(['name' => 'update tasks']);
+        Permission::create(['name' => 'delete tasks']);
+        // workflow level
+        Permission::create(['name' => 'create workflows']);
+        Permission::create(['name' => 'read workflows']);
+        Permission::create(['name' => 'update workflows']);
+        Permission::create(['name' => 'execute workflows']);
+        Permission::create(['name' => 'delete workflows']);
+        Permission::create(['name' => 'publish workflows']);
+        Permission::create(['name' => 'unpublish workflows']);
+        
 
         // create roles and assign existing permissions
-        $role1 = Role::create(['name' => 'writer']);
-        $role1->givePermissionTo('edit articles');
-        $role1->givePermissionTo('delete articles');
+        $role1 = Role::create(['name' => 'user']);
+        $role1->givePermissionTo('create tasks');
+        $role1->givePermissionTo('read tasks');
+        $role1->givePermissionTo('update tasks');
+        $role1->givePermissionTo('delete tasks');
+        $role1->givePermissionTo('execute workflows');
 
-        $role2 = Role::create(['name' => 'admin']);
-        $role2->givePermissionTo('publish articles');
-        $role2->givePermissionTo('unpublish articles');
+        $role2 = Role::create(['name' => 'app-admin']);
+        $role2->givePermissionTo('create workflows');
+        $role2->givePermissionTo('read workflows');
+        $role2->givePermissionTo('update workflows');
+        $role2->givePermissionTo('execute workflows');
+        $role2->givePermissionTo('delete workflows');
+        $role2->givePermissionTo('publish workflows');
+        $role2->givePermissionTo('unpublish workflows');
 
-        $role3 = Role::create(['name' => 'Super-Admin']);
+        $role3 = Role::create(['name' => 'sys-admin']);
         // gets all permissions via Gate::before rule; see AuthServiceProvider
 
         // create demo users
         $user = \App\Models\User::factory()->create([
             'name' => 'Example User',
-            'email' => 'tester@example.com',
+            'email' => 'user@example.com',
         ]);
         $user->assignRole($role1);
 
         $user = \App\Models\User::factory()->create([
-            'name' => 'Example Admin User',
-            'email' => 'admin@example.com',
+            'name' => 'Example App Admin User',
+            'email' => 'appadmin@example.com',
         ]);
         $user->assignRole($role2);
 
         $user = \App\Models\User::factory()->create([
-            'name' => 'Example Super-Admin User',
-            'email' => 'superadmin@example.com',
+            'name' => 'Example Sys-Admin User',
+            'email' => 'sysadmin@example.com',
         ]);
         $user->assignRole($role3);
     }
 }
 
-```
-
-- re-migrate and seed the database:
-
-```sh
-php artisan migrate:fresh --seed --seeder=PermissionsDemoSeeder
-```
-
-### Grant Super-Admin access
-Super-Admins are a common feature. The following approach allows that when your Super-Admin user is logged in, all permission-checks in your app which call `can()` or `@can()` will return true.
-
-- Create a role named `Super-Admin`. (Or whatever name you wish; but use it consistently just like you must with any role name.)
-- Add a Gate::before check in your `AuthServiceProvider` (or `AppServiceProvider` since Laravel 11):
-
-```diff
-+ use Illuminate\Support\Facades\Gate;
-
-    public function boot()
-    {
-+        // Implicitly grant "Super-Admin" role all permission checks using can()
-+        Gate::before(function ($user, $ability) {
-+            if ($user->hasRole('Super-Admin')) {
-+                return true;
-+            }
-+        });
-    }
 ```
 
 

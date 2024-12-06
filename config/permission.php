@@ -118,9 +118,11 @@ return [
      * If you already did the migration then you must make a new migration to also
      * add 'team_foreign_key' to 'roles', 'model_has_roles', and 'model_has_permissions'
      * (view the latest version of this package's migration file)
+     * 
+     * if teams enabled, there should be a lot of things to do.
      */
 
-    'teams' => true,
+    'teams' => false,
 
     /*
      * Passport Client Credentials Grant
