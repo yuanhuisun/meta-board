@@ -54,14 +54,28 @@ git add . && git commit -m "Setup auth scaffold"
 When enabled, teams permissions offers you flexible control for a variety of scenarios. The idea behind teams permissions is inspired by the default permission implementation of [Laratrust](https://laratrust.santigarcor.me/).
 
 
-### Install from git
+### Installation from git
+1. Clone this project
+2. Go to the folder application using cd command on your cmd or terminal
+3. Run composer install
+4. Copy .env.example file to .env on the root folder.
+5. Open your .env file and change the database name (DB_DATABASE) to whatever you have, username (DB_USERNAME) and password (DB_PASSWORD) field correspond to your configuration.
+6. Run php artisan key:generate
+7. Run php artisan migrate
+8. Run php artisan db:seed
+9. Run npm install to install all JavaScript dependencies
+10. Run npm run dev to start the application
+11. Visit the application in the browser
+
+
 ```shell
 git clone https://github.com/yuanhuisun/meta-board.git
-cp -r .env.example .env
 touch database/database.sqlite 
 composer install
-php artisan migrate:fresh
+cp -r .env.example .env
 php artisan key:generate
+php artisan migrate:fresh
+php artisan db:seed --class=PermissionUserSeeder
 pnpm install
 pnpm dev run
 ```
@@ -326,7 +340,7 @@ If you are creating a demo app for reporting a bug or getting help with troubles
 
 If this is your first app with this package, you may want some quick permission examples to see it in action. If you've set up your app using the instructions above, the following examples will work in conjunction with the users and permissions created in the seeder.
 
-Three users were created: test@example.com, admin@example.com, superadmin@example.com and the password for each is "password".
+Three users were created: user@example.com, appadmin@example.com, sysadmin@example.com and the password for each is "password".
 
 `/resources/views/dashboard.php`
 ```diff
