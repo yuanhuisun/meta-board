@@ -53,6 +53,20 @@ git add . && git commit -m "Setup auth scaffold"
 
 When enabled, teams permissions offers you flexible control for a variety of scenarios. The idea behind teams permissions is inspired by the default permission implementation of [Laratrust](https://laratrust.santigarcor.me/).
 
+
+### Install from git
+```shell
+git clone https://github.com/yuanhuisun/meta-board.git
+cp -r .env.example .env
+touch database/database.sqlite 
+composer install
+php artisan migrate:fresh
+php artisan key:generate
+pnpm install
+pnpm dev run
+```
+
+
 ## Enabling Teams Permissions Feature
 
 NOTE: These configuration changes must be made **before** performing the migration when first installing the package.
